@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Thu May 19 12:30:07 2022
+HHT spectrogram and envelope utilities (EMD-based, original 2022 code).
 
-@author: dmelgarm
+Kept API-compatible: spectrogram() still decomposes with plain EMD
+internally. For the PGA/PGV instantaneous-frequency work use the
+CEEMDAN wrappers in hht_tools.decompose and the peak readers in
+hht_tools.instfreq.
 """
 
 from PyEMD import EMD

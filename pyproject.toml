@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hht_tools"
+version = "0.2.0"
+description = "Hilbert-Huang transform utilities: seeded EMD/CEEMDAN wrappers, instantaneous frequency at peaks, HHT spectrograms"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "scipy",
+    "EMD-signal>=1.5",
+]
+
+[tool.setuptools.packages.find]
+include = ["hht_tools*"]
