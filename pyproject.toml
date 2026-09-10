@@ -6,6 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "hht_tools"
 version = "0.2.0"
 description = "Hilbert-Huang transform utilities: seeded EMD/CEEMDAN wrappers, instantaneous frequency at peaks, HHT spectrograms"
+license = {file = "LICENSE"}
+authors = [{name = "Diego Melgar"}]
 requires-python = ">=3.9"
 dependencies = [
     "numpy",
