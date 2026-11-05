@@ -23,6 +23,13 @@
 - Add input, residual, zero-crossing, and spectrogram regression tests;
   automated Python-version checks; citation metadata; modern package
   metadata; and a runnable synthetic example. Clear stale notebook output.
+- Remove `hht_tools.txt`, an obsolete duplicate of the original 2022 module.
+- Replace the legacy demo with a Markdown-guided synthetic-then-Napa
+  walkthrough: fresh seeded CEEMDAN, Fourier spectrograms, Morlet
+  scalograms, Hilbert trajectories, and peak-frequency comparisons.
+  Bundle the processed Napa example with provenance and provide an
+  optional ObsPy download/response-removal recipe. Demo dependencies
+  require SciPy >= 1.12 for `ShortTimeFFT`.
 
 ### Preparing the release
 
@@ -31,8 +38,6 @@
    `python -m build`). No publishing step is automated.
 2. Confirm version 0.3.0 in `pyproject.toml` and `CITATION.cff`, set the actual
    release date here and in `CITATION.cff`, and review the tagged contents.
-   The untracked legacy `hht_tools.txt` is an obsolete duplicate candidate;
-   it is not part of the package and should not be added to the release.
 3. Enable the repository in Zenodo before publishing the matching GitHub
    release. Use the release-specific DOI in citations; add it to the README
    and citation metadata when available. Do not insert a placeholder DOI.

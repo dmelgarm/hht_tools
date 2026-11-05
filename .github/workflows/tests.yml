@@ -26,3 +26,8 @@ jobs:
         working-directory: ${{ runner.temp }}
         run: python -m pytest --import-mode=importlib "${GITHUB_WORKSPACE}/tests" -q
       - run: python -m build
+      - name: Execute the offline demo
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.11'
+        run: |
+          python -m pip install ".[demo]" nbconvert
+          python -m jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=600 --output demo-executed.ipynb --output-dir "${RUNNER_TEMP}" demo.ipynb

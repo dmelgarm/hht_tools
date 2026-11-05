@@ -1,1 +1,2 @@
 include CITATION.cff CHANGELOG.md demo.ipynb
+recursive-include examples/data *.npz *.md

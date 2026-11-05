@@ -66,8 +66,21 @@ print("Peak near an edge:", res["peak_in_edge"])
 print(zero_crossing_freq(x, fs))  # model-free check
 ```
 
-The synthetic `demo.ipynb` demonstrates the spectrogram. Install its optional
-dependencies with `python -m pip install ".[demo]"`, then open it in Jupyter.
+`demo.ipynb` walks through the paper's tone/chirp/burst synthetic, followed
+by the South Napa `NC.C032.01.HNE` recording. Each example compares a Fourier
+spectrogram, Morlet scalogram, and Hilbert spectrum, with measurements at
+the signal peak. The Napa example reproduces the Figure 2 readings from
+fresh calculations on a bundled processed waveform. Both examples run
+offline; no cached IMFs or study scripts are needed.
+
+From the repository or extracted source distribution, install the demo
+dependencies with `python -m pip install ".[demo]"`, then open `demo.ipynb`
+in Jupyter and run the cells in order. Seeded 200-trial decompositions
+take a few minutes, depending on the computer. The optional final section
+shows how to download and response-correct the Napa record with ObsPy
+(`python -m pip install "obspy>=1.4" "setuptools<81"`); it runs only when
+explicitly called. Waveform provenance and processing settings are in
+[`examples/data/README.md`](examples/data/README.md).
 
 ## Reproducibility and residual handling
 

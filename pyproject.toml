@@ -19,7 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=7"]
-demo = ["matplotlib", "notebook"]
+demo = ["scipy>=1.12", "matplotlib>=3.6", "notebook"]
 
 [project.urls]
 Repository = "https://github.com/dmelgarm/hht_tools"
