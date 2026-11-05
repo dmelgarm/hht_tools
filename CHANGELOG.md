@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 — unreleased
+## 0.3.0 — 2026-11-05
 
 - Preserve the default decomposition outputs and full-stack peak-frequency
   measurement method from 0.2.0: decomposition settings, seed application,

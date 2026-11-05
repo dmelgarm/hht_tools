@@ -3,6 +3,7 @@ message: "If you use this software, please cite the archived release and its ver
 type: software
 title: "hht_tools: Hilbert-Huang transform utilities"
 version: 0.3.0
+date-released: 2026-11-05
 authors:
   - family-names: Melgar
     given-names: Diego
