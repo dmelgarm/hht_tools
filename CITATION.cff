@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the archived release and its version-specific DOI."
+type: software
+title: "hht_tools: Hilbert-Huang transform utilities"
+version: 0.3.0
+authors:
+  - family-names: Melgar
+    given-names: Diego
+license: MIT
+repository-code: "https://github.com/dmelgarm/hht_tools"
+url: "https://github.com/dmelgarm/hht_tools"
+abstract: >-
+  Python utilities for seeded EMD and CEEMDAN decomposition, per-IMF
+  instantaneous frequency and amplitude-weighted frequency summaries at
+  signal peaks, zero-crossing checks, and Hilbert amplitude spectrograms.
+keywords:
+  - Hilbert-Huang transform
+  - empirical mode decomposition
+  - CEEMDAN
+  - seismology

@@ -1,12 +1,14 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "hht_tools"
-version = "0.2.0"
+version = "0.3.0"
 description = "Hilbert-Huang transform utilities: seeded EMD/CEEMDAN wrappers, instantaneous frequency at peaks, HHT spectrograms"
-license = {file = "LICENSE"}
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{name = "Diego Melgar"}]
 requires-python = ">=3.9"
 dependencies = [
@@ -14,6 +16,14 @@ dependencies = [
     "scipy",
     "EMD-signal>=1.5",
 ]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+demo = ["matplotlib", "notebook"]
+
+[project.urls]
+Repository = "https://github.com/dmelgarm/hht_tools"
+Issues = "https://github.com/dmelgarm/hht_tools/issues"
 
 [tool.setuptools.packages.find]
 include = ["hht_tools*"]

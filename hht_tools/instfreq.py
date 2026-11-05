@@ -5,12 +5,14 @@ IF is defined per IMF, never for the composite record. At a peak we
 report a triplet: IF of the amplitude-dominant IMF, amplitude-weighted
 mean IF across IMFs, and the amplitude-weighted IF spread. The spread is
 a result, not a nuisance: it measures whether the peak is monochromatic
-or an interference of scales. zero_crossing_freq() is the model-free
-cross-check that must always accompany the triplet.
+or an interference of scales. zero_crossing_freq() provides an independent
+cross-check.
 """
 
 import numpy as np
 from scipy.signal import hilbert
+
+from ._validation import real_scalar, signal_array, time_array
 
 
 def instantaneous_frequency(imf, fs, edge_mask_s=0.0):
@@ -36,6 +38,9 @@ def instantaneous_frequency(imf, fs, edge_mask_s=0.0):
         Hilbert amplitude envelope
     """
 
+    imf = signal_array(imf, "imf")
+    real_scalar(fs, "fs", strictly_positive=True)
+    real_scalar(edge_mask_s, "edge_mask_s")
     z = hilbert(imf)
     phase = np.unwrap(np.angle(z))
     f = np.gradient(phase) * fs / (2.0 * np.pi)
@@ -54,13 +59,17 @@ def if_at_peak(imfs, x, fs, t, amp_threshold=0.05, edge_mask_s=1.0):
     Parameters
     ----------
     imfs : np.array
-        2D IMF stack (n_imfs, n_samples) from a decomposition of x
+        Finite 2D IMF stack (n_imfs, n_samples). Every supplied row is
+        screened and may contribute, including any supplied residual.
+        Use decompose_emd/ceemdan(..., return_residual=True) to separate
+        the residual before calling this function. No final row is
+        implicitly discarded, preserving the original measurement method.
     x : np.array
         The composite record (used only to locate the peak)
     fs : float
         Sampling rate in Hz
     t : np.array
-        Time vector for x
+        Uniformly increasing time vector for x, with spacing 1/fs
     amp_threshold : float, optional
         Exclude IMFs whose Hilbert amplitude at the peak is below this
         fraction of the amplitude-dominant IMF (CEEMDAN leaves a noise
@@ -82,7 +91,17 @@ def if_at_peak(imfs, x, fs, t, amp_threshold=0.05, edge_mask_s=1.0):
         peak_in_edge : True if the peak lies inside the edge mask
     """
 
-    x = np.asarray(x, dtype=float)
+    x = signal_array(x, "x").astype(float)
+    real_scalar(fs, "fs", strictly_positive=True)
+    real_scalar(edge_mask_s, "edge_mask_s")
+    real_scalar(amp_threshold, "amp_threshold")
+    if amp_threshold > 1:
+        raise ValueError("amp_threshold must lie in [0, 1]")
+    t = time_array(t, x.size, 1 / fs)
+    imfs = np.asarray(imfs)
+    if (imfs.ndim != 2 or imfs.shape[0] == 0 or imfs.shape[1] != x.size
+            or imfs.dtype.kind not in "biuf" or not np.all(np.isfinite(imfs))):
+        raise ValueError("imfs must be a finite real 2D array with one column per signal sample")
     ipk = int(np.argmax(np.abs(x)))
 
     fis, amps = [], []
@@ -93,7 +112,7 @@ def if_at_peak(imfs, x, fs, t, amp_threshold=0.05, edge_mask_s=1.0):
     fis, amps = np.array(fis), np.array(amps)
 
     # keep physically meaningful IF values, then amplitude-threshold
-    good = np.isfinite(fis) & (fis > 0) & (fis < fs / 2)
+    good = np.isfinite(fis) & (fis > 0) & (fis < fs / 2) & (amps > 0)
     fis, amps = fis[good], amps[good]
     if fis.size == 0:
         raise ValueError("no IMF has a valid IF at the peak")
@@ -128,12 +147,20 @@ def zero_crossing_freq(x, fs):
     -------
     f : float
         1 / (2 * half period) in Hz, or NaN if the peak is not bracketed
+        by sign-changing crossings. A zero touch is not a crossing.
+        Crossings between adjacent samples use the left sample index
+        (the original sample-resolved convention). A zero run separating
+        opposite signs contributes one crossing at the run's midpoint.
     """
 
-    x = np.asarray(x, dtype=float)
+    x = signal_array(x, "x").astype(float)
+    real_scalar(fs, "fs", strictly_positive=True)
     ipk = int(np.argmax(np.abs(x)))
-    s = np.sign(x)
-    zc = np.where(np.diff(s) != 0)[0]
+    nonzero = np.flatnonzero(x)
+    left, right = nonzero[:-1], nonzero[1:]
+    changes = np.signbit(x[left]) != np.signbit(x[right])
+    left, right = left[changes], right[changes]
+    zc = np.where(right == left + 1, left, (left + right) / 2.0)
     before = zc[zc < ipk]
     after = zc[zc >= ipk]
     if len(before) == 0 or len(after) == 0:
